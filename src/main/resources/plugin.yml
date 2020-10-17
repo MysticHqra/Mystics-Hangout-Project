@@ -1,0 +1,15 @@
+name: MysticsHangout
+version: ${project.version}
+main: me.mystichara.mysticshangout.MysticsHangout
+api-version: 1.16
+authors: [ MysticHara ]
+description: Mystics Hangout official plugin
+website: www.mystichara.weebly.com
+commands:
+  mystic:
+    description: Show info about the plugin
+    usage: /<command>
+    aliases: [mysticshangout, mh]
+  bengali:
+    description: Command to spawn bengali
+    usage: /<command>
