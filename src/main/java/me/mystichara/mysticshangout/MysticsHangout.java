@@ -2,6 +2,7 @@ package me.mystichara.mysticshangout;
 
 import me.mystichara.mysticshangout.commands.Bengali;
 import me.mystichara.mysticshangout.events.onDeath;
+import me.mystichara.mysticshangout.events.onWorldLoad;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -24,6 +25,7 @@ public final class MysticsHangout extends JavaPlugin implements Listener {
         getLogger().info("Plugin by MysticHara");
         getServer().getPluginManager().registerEvents(this,this);
         getServer().getPluginManager().registerEvents(new onDeath(),this);
+        getServer().getPluginManager().registerEvents(new onWorldLoad(),this);
         getCommand("bengali").setExecutor(new Bengali());
     }
 

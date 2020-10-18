@@ -2,10 +2,11 @@ package me.mystichara.mysticshangout.events;
 
 import me.mystichara.mysticshangout.MysticsHangout;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.plugin.Plugin;
 
-public class onWorldLoad {
+public class onWorldLoad implements Listener {
 
     Plugin plugin = MysticsHangout.getPlugin(MysticsHangout.class);
 
