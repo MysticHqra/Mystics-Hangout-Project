@@ -26,6 +26,7 @@ public final class MysticsHangout extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this,this);
         getServer().getPluginManager().registerEvents(new onDeath(),this);
         getServer().getPluginManager().registerEvents(new onWorldLoad(),this);
+        getServer().getPluginManager().registerEvents(new Bengali(),this);
         getCommand("bengali").setExecutor(new Bengali());
     }
 

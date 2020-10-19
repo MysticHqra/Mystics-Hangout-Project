@@ -7,9 +7,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
-public class Bengali implements CommandExecutor {
+public class Bengali implements CommandExecutor, Listener {
 
     Plugin plugin = MysticsHangout.getPlugin(MysticsHangout.class);
     static String owner = "";
@@ -23,18 +27,24 @@ public class Bengali implements CommandExecutor {
                 if(owner.equals("")) {
                     plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"npc select 4");
                     plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"sentinel guard "+sender.getName());
+                    plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"citizens save");
+                    plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"citizens reload");
                     owner = sender.getName();
                     sender.sendMessage(MysticsHangout.Color("&aBengali is now guarding you."));
                 }
                 else if(owner.equals(sender.getName())) {
                     plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"npc select 4");
                     plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"sentinel guard");
+                    plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"citizens save");
+                    plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"citizens reload");
                     owner = "";
                     sender.sendMessage(MysticsHangout.Color("&cBengali is no longer guarding you."));
                 }
                 else {
                     sender.sendMessage(MysticsHangout.Color("&cBengali was guarding "+owner));
                     transfer(sender.getName(), owner);
+                    plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"citizens save");
+                    plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"citizens reload");
                     owner = sender.getName();
                     sender.sendMessage(MysticsHangout.Color("&aBengali is now guarding you"));
                 }
@@ -46,6 +56,8 @@ public class Bengali implements CommandExecutor {
                     if(owner.equals("")) {
                         plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"npc select 4");
                         plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"sentinel guard "+sender.getName());
+                        plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"citizens save");
+                        plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"citizens reload");
                         owner = sender.getName();
                         sender.sendMessage(MysticsHangout.Color("&aBengali is now guarding you."));
                     }
@@ -55,6 +67,8 @@ public class Bengali implements CommandExecutor {
                     else {
                         sender.sendMessage(MysticsHangout.Color("&cBengali was guarding "+owner));
                         transfer(sender.getName(), owner);
+                        plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"citizens save");
+                        plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"citizens reload");
                         owner = sender.getName();
                         sender.sendMessage(MysticsHangout.Color("&aBengali is now guarding you"));
                     }
@@ -64,6 +78,8 @@ public class Bengali implements CommandExecutor {
                     if(owner.equals(sender.getName())) {
                         plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"npc select 4");
                         plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"sentinel guard");
+                        plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"citizens save");
+                        plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"citizens reload");
                         owner = "";
                         sender.sendMessage(MysticsHangout.Color("&cBengali no longer guards you."));
                     }
@@ -92,6 +108,8 @@ public class Bengali implements CommandExecutor {
                             if(owner.equals(target.getName())) {
                                 plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), "npc select 4");
                                 plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), "sentinel guard");
+                                plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"citizens save");
+                                plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"citizens reload");
                                 owner = "";
                                 sender.sendMessage(MysticsHangout.Color("&6Bengali no longer guards "+target.getName()));
                                 target.sendMessage(MysticsHangout.Color("&6"+sender+" made Bengali to stop guarding you"));
@@ -99,6 +117,8 @@ public class Bengali implements CommandExecutor {
                             else {
                                 plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), "npc select 4");
                                 plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), "sentinel guard " + args[0]);
+                                plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"citizens save");
+                                plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"citizens reload");
                                 owner = target.getName();
                                 sender.sendMessage(MysticsHangout.Color("&6Bengali now guards " + args[0]));
                                 target.sendMessage(MysticsHangout.Color("&6" + sender.getName() + " made Bengali guard you"));
@@ -123,7 +143,25 @@ public class Bengali implements CommandExecutor {
 
     public void transfer(String sender, String owner) {
         Player target = Bukkit.getPlayerExact(owner);
-        target.sendMessage(ChatColor.RED+sender+" took your Bengali");
+        if(target instanceof Player) {
+            target.sendMessage(ChatColor.RED+sender+" took your Bengali");
+        }
         plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"sentinel guard "+sender);
+    }
+
+    @EventHandler
+    public void WorldChange(PlayerChangedWorldEvent e) {
+        if(owner.equals(e.getPlayer().getName())) {
+
+            BukkitScheduler scheduler = plugin.getServer().getScheduler();
+            scheduler.scheduleSyncDelayedTask(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"citizens save");
+                    plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(),"citizens reload");
+                }
+            }, 20L);
+
+        }
     }
 }
